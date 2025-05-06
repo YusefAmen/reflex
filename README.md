@@ -1,1 +1,1 @@
-# reflex
+Reflex is an open-source, plug-and-play observability stack designed to help engineering teams gain insight into their services without needing to hire a full-time SRE. It brings together logging, metrics, and alerting via Kubernetes-native components. The mission is to automate SRE-level observability in a way that’s scalable, extensible, and developer-first.
