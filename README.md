@@ -14,7 +14,7 @@ Reflex is the **Sentry for Chrome extensions**, offering lightweight SDK integra
 * **Billing**: Stripe (Pro and Team tiers)
 * **Async/Eventing**: Redpanda (Kafka-compatible), Celery
 
-This monorepo uses a modern scalable structure with `apps/web` and `apps/backend`, supported by Docker, GitHub Actions, and design-first AI development using [Cursor](https://cursor.so) and [Tempo](https://usetempo.co).
+
 
 ---
 
@@ -27,10 +27,6 @@ reflex/
 │   └── backend/     # FastAPI API, Kafka, Celery workers
 ├── reflex-landing/  # Public marketing site (Vercel-hosted)
 ├── infra/           # Docker Compose, Fly.io config
-├── docs/
-│   ├── ui-guidelines.md
-│   └── ai-prompts.md
-├── prompts/         # Prompt templates for Cursor & Tempo (optional)
 ├── README.md
 └── .gitignore
 ```
@@ -155,15 +151,6 @@ cd infra && docker-compose up --build
 
 ---
 
-## 🧠 AI-Assisted Development
-
-Reflex uses design-first collaboration with:
-
-* [Cursor](https://cursor.so) → for backend scaffolding, logic, workers
-* [Tempo](https://usetempo.co) → for dashboard + landing UI scaffolding
-
-📄 See [`docs/ai-prompts.md`](./docs/ai-prompts.md) for complete Tempo + Cursor prompts.
-
 ---
 
 ## 🗺 Next Steps
@@ -180,8 +167,6 @@ Reflex uses design-first collaboration with:
 * GitHub: [@yourhandle](https://github.com/yourhandle)
 * Twitter: [@reflex\_dev](https://twitter.com/reflex_dev)
 * Email: `founder@reflex.dev`
-
-
 
 
 
@@ -207,16 +192,14 @@ When working on any Reflex UI component:
 
 ### Example UI Prompt Format (for Cursor)
 
-# 🧠 Reflex AI-Driven Dev Prompts (Frontend & Backend)
+# 🧠 Reflex AI-Driven Dev Prompts (Frontend)
 
-This section defines the exact prompts used with **Tempo** (frontend UI) and **Cursor** (backend logic).  
+This section defines the exact prompts used with **Tempo** (frontend UI).  
 These are optimized for building Reflex as a fast, developer-first observability tool.
 
 ---
 
-## 🧩 Frontend Prompt (Tempo)
-
-Use this prompt in **Tempo** to scaffold or iterate the Reflex frontend UI (`apps/web/`):
+## 🧩 Frontend
 
 ```txt
 Build a Next.js frontend for a dashboard-based observability app called Reflex. Include:
@@ -242,7 +225,7 @@ API Routes:
 Use fetch or useSWR to query APIs. Do not hardcode responses. Keep layout developer-focused like Supabase or Sentry.
 
 
-[Cursor Prompt – Reflex Backend MVP]
+Reflex Backend MVP
 
 Build the backend for Reflex, a real-time observability tool for Chrome extensions. Use FastAPI as the web framework. The backend handles log ingestion, user project management, reactions, and complaint grouping.
 
