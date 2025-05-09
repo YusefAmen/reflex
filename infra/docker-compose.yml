@@ -1,0 +1,43 @@
+version: "3.9"
+services:
+  backend:
+    build: ../apps/backend
+    container_name: reflex-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../apps/backend/.env
+    depends_on:
+      - kafka
+      - postgres
+      - redis
+
+  kafka:
+    image: vectorized/redpanda:v23.1.2
+    container_name: reflex-kafka
+    command:
+      - redpanda start --overprovisioned --smp 1 --memory 1G --reserve-memory 0M --node-id 0 --check=false
+    ports:
+      - "9092:9092"
+      - "9644:9644"
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: reflex-postgres
+    environment:
+      POSTGRES_USER: supabase
+      POSTGRES_PASSWORD: supabase
+      POSTGRES_DB: supabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: reflex-redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  pgdata: 

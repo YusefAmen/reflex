@@ -1,0 +1,8 @@
+{
+  "projectId": "reflex-web",
+  "orgId": "your-org-id",
+  "settings": {
+    "framework": "nextjs",
+    "ignoreCommand": "pnpm test && pnpm lint"
+  }
+} 

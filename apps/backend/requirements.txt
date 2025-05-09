@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+pydantic
+python-dotenv
+kafka-python
+celery
+psycopg2-binary 

@@ -1,2 +1,67 @@
 .version*
 .README.md
+docs/
+
+# === General ===
+.env
+.env.*
+!.env.template
+
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+*.log
+*.sqlite3
+*.db
+
+# === Next.js ===
+.next/
+out/
+.vercel/
+.cache/
+public/build/
+
+# === Python / FastAPI ===
+apps/backend/__pycache__/
+apps/backend/.pytest_cache/
+apps/backend/.mypy_cache/
+apps/backend/.ruff_cache/
+apps/backend/.coverage
+apps/backend/htmlcov/
+
+# === Supabase ===
+.supabase/
+supabase/.temp/
+
+# === Docker ===
+*.pid
+*.sock
+*.tar
+*.img
+*.lock
+docker-compose.override.yml
+
+# === Test Artifacts ===
+coverage/
+*.lcov
+jest.config.js
+coverage-final.json
+
+# === IDE/Editor ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+
+# === Cursor ===
+.cursorconfig
+.cursorrules
+.cursorhistory/
+.cursor
+
+# === CI/CD ===
+.github/workflows/*.log
+tmp/
+

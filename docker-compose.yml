@@ -1,0 +1,66 @@
+version: "3.9"
+services:
+  web:
+    build:
+      context: ./apps/web
+    container_name: reflex-web
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/web:/app
+    command: pnpm dev
+    environment:
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+    depends_on:
+      - backend
+      - postgres
+
+  backend:
+    build:
+      context: ./apps/backend
+    container_name: reflex-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./apps/backend:/app
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 8000
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: reflex-postgres
+    environment:
+      POSTGRES_USER: supabase
+      POSTGRES_PASSWORD: supabase
+      POSTGRES_DB: supabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: reflex-redis
+    ports:
+      - "6379:6379"
+
+  test-backend:
+    build:
+      context: ./apps/backend
+    container_name: reflex-test-backend
+    volumes:
+      - ./apps/backend:/app
+    command: pytest /app/tests/
+    depends_on:
+      - backend
+      - postgres
+      - redis
+
+volumes:
+  pgdata: 

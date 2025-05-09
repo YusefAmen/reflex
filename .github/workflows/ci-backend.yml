@@ -1,0 +1,29 @@
+name: CI Backend
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: cd apps/backend && pip install -r requirements.txt
+
+      - name: Test
+        run: cd apps/backend && pytest
+
+      - name: Ensure minimum test coverage
+        run: cd apps/backend && pytest --cov=. --cov-fail-under=70
+
+      # Optionally, add deploy step to Fly.io here 
