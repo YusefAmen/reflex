@@ -1,0 +1,22 @@
+# Ignore test files and coverage
+__tests__/
+coverage/
+*.test.tsx
+*.spec.tsx
+
+# Ignore dev-only files
+*.log
+.env
+.env.*
+!.env.local
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore monorepo content not needed for frontend
+../../apps/backend/
+../../infra/
+../../supabase/
+../../docs/
+../../prompts/

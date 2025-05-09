@@ -25,5 +25,3 @@ jobs:
 
       - name: Ensure minimum test coverage
         run: cd apps/backend && pytest --cov=. --cov-fail-under=70
-
-      # Optionally, add deploy step to Fly.io here 

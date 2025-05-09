@@ -26,5 +26,3 @@ jobs:
 
       - name: Run Jest with coverage
         run: cd apps/web && pnpm test -- --coverage --coverageThreshold=80
-
-      # Optionally, add deploy step to Vercel here 
