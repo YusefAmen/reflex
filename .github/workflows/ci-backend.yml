@@ -21,7 +21,7 @@ jobs:
         run: cd apps/backend && pip install -r requirements.txt
 
       - name: Test
-        run: cd apps/backend && pytest
+        run: cd apps/backend && pytest --import-mode=importlib
 
       - name: Ensure minimum test coverage
-        run: cd apps/backend && pytest --cov=. --cov-fail-under=70
+        run: cd apps/backend && pytest --import-mode=importlib --cov=. --cov-fail-under=70
