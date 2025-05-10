@@ -2,13 +2,18 @@ from fastapi.testclient import TestClient
 from main import app
 import pytest
 from datetime import datetime, timedelta
+import os
+
+# Set test environment
+os.environ["ENV"] = "test"
 
 client = TestClient(app)
+headers = {"Authorization": "Bearer test-token"}
 
 def test_get_complaints():
     """Test retrieving complaints for a project"""
     project_id = "11111111-1111-1111-1111-111111111111"
-    response = client.get(f"/api/complaints/{project_id}")
+    response = client.get(f"/api/complaints/{project_id}", headers=headers)
     assert response.status_code == 200
     complaints = response.json()
     assert isinstance(complaints, list)
@@ -22,7 +27,7 @@ def test_get_complaint_details():
     """Test retrieving details of a specific complaint"""
     # First create a complaint (this would normally happen via reaction trigger)
     complaint_id = "22222222-2222-2222-2222-222222222222"
-    response = client.get(f"/api/complaints/{complaint_id}")
+    response = client.get(f"/api/complaints/{complaint_id}", headers=headers)
     assert response.status_code == 200
     complaint = response.json()
     assert "id" in complaint
@@ -38,7 +43,7 @@ def test_update_complaint_status():
         "status": "resolved",
         "resolution_notes": "Fixed the issue"
     }
-    response = client.patch(f"/api/complaints/{complaint_id}", json=update_payload)
+    response = client.patch(f"/api/complaints/{complaint_id}", json=update_payload, headers=headers)
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "resolved"
@@ -49,7 +54,7 @@ def test_get_complaints_with_filters():
     project_id = "11111111-1111-1111-1111-111111111111"
     
     # Test status filter
-    response = client.get(f"/api/complaints/{project_id}?status=active")
+    response = client.get(f"/api/complaints/{project_id}?status=active", headers=headers)
     assert response.status_code == 200
     complaints = response.json()
     assert isinstance(complaints, list)
@@ -60,7 +65,8 @@ def test_get_complaints_with_filters():
     start_date = (datetime.now() - timedelta(days=7)).isoformat()
     end_date = datetime.now().isoformat()
     response = client.get(
-        f"/api/complaints/{project_id}?start_date={start_date}&end_date={end_date}"
+        f"/api/complaints/{project_id}?start_date={start_date}&end_date={end_date}",
+        headers=headers
     )
     assert response.status_code == 200
     complaints = response.json()

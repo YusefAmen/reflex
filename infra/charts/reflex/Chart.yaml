@@ -1,0 +1,10 @@
+apiVersion: v2
+name: reflex
+description: A Helm chart for Reflex event processing system
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+dependencies:
+  - name: redis
+    version: "17.11.3"
+    repository: https://charts.bitnami.com/bitnami 

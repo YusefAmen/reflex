@@ -1,0 +1,43 @@
+{{- if .Values.kafka.enabled }}
+apiVersion: cluster.redpanda.com/v1alpha1
+kind: Cluster
+metadata:
+  name: {{ .Release.Name }}-kafka
+  labels:
+    app: {{ .Release.Name }}
+    component: kafka
+spec:
+  image: vectorized/redpanda
+  version: latest
+  replicas: {{ .Values.kafka.replicas }}
+  resources:
+    requests:
+      cpu: {{ .Values.kafka.resources.requests.cpu }}
+      memory: {{ .Values.kafka.resources.requests.memory }}
+    limits:
+      cpu: {{ .Values.kafka.resources.limits.cpu }}
+      memory: {{ .Values.kafka.resources.limits.memory }}
+  configuration:
+    kafka:
+      autoCreateTopicsEnabled: {{ .Values.kafka.config.autoCreateTopics }}
+    developerMode: {{ .Values.kafka.config.developerMode }}
+  storage:
+    persistentVolume:
+      size: {{ .Values.kafka.storage.size }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-kafka
+  labels:
+    app: {{ .Release.Name }}
+    component: kafka
+spec:
+  ports:
+    - port: 9092
+      targetPort: 9092
+      name: kafka
+  selector:
+    app: {{ .Release.Name }}
+    component: kafka
+{{- end }} 

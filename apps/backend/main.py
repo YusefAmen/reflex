@@ -1,7 +1,15 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from routers import logs, reactions, complaints
+import os
 
 app = FastAPI()
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    print(f"[MIDDLEWARE DEBUG] {request.method} {request.url}")
+    print(f"[MIDDLEWARE DEBUG] Headers: {dict(request.headers)}")
+    response = await call_next(request)
+    return response
 
 app.include_router(logs.router, prefix="/api/logs", tags=["logs"])
 app.include_router(reactions.router, prefix="/api/reactions", tags=["reactions"])

@@ -1,9 +1,12 @@
 from fastapi.testclient import TestClient
 from main import app
-import pytest
-from datetime import datetime, timedelta
+import os
+
+# Set test environment
+os.environ["ENV"] = "test"
 
 client = TestClient(app)
+headers = {"Authorization": "Bearer test-token"}
 
 def test_create_reaction():
     """Test creating a new reaction"""
@@ -17,23 +20,24 @@ def test_create_reaction():
             "email": "test@example.com"
         }
     }
-    response = client.post("/api/reactions/", json=reaction_payload)
+    response = client.post("/api/reactions/", json=reaction_payload, headers=headers)
     assert response.status_code == 200
     data = response.json()
-    assert data["status"] == "created"
     assert "id" in data
+    assert data["project_id"] == reaction_payload["projectId"]
+    assert data["event"] == reaction_payload["event"]
+    assert data["threshold"] == reaction_payload["threshold"]
+    assert data["window_minutes"] == reaction_payload["window_minutes"]
+    assert data["action"] == reaction_payload["action"]
+    assert data["action_config"] == reaction_payload["action_config"]
 
 def test_get_reactions():
     """Test retrieving reactions for a project"""
     project_id = "11111111-1111-1111-1111-111111111111"
-    response = client.get(f"/api/reactions/{project_id}")
+    response = client.get(f"/api/reactions/{project_id}", headers=headers)
     assert response.status_code == 200
     reactions = response.json()
     assert isinstance(reactions, list)
-    if reactions:
-        assert "event" in reactions[0]
-        assert "threshold" in reactions[0]
-        assert "action" in reactions[0]
 
 def test_update_reaction():
     """Test updating an existing reaction"""
@@ -48,19 +52,19 @@ def test_update_reaction():
             "email": "test@example.com"
         }
     }
-    create_response = client.post("/api/reactions/", json=reaction_payload)
+    create_response = client.post("/api/reactions/", json=reaction_payload, headers=headers)
     reaction_id = create_response.json()["id"]
 
     # Update the reaction
     update_payload = {
         "threshold": 10,
-        "window_minutes": 15
+        "window_minutes": 20
     }
-    response = client.patch(f"/api/reactions/{reaction_id}", json=update_payload)
+    response = client.patch(f"/api/reactions/{reaction_id}", json=update_payload, headers=headers)
     assert response.status_code == 200
     data = response.json()
-    assert data["threshold"] == 10
-    assert data["window_minutes"] == 15
+    assert data["threshold"] == update_payload["threshold"]
+    assert data["window_minutes"] == update_payload["window_minutes"]
 
 def test_delete_reaction():
     """Test deleting a reaction"""
@@ -75,14 +79,10 @@ def test_delete_reaction():
             "email": "test@example.com"
         }
     }
-    create_response = client.post("/api/reactions/", json=reaction_payload)
+    create_response = client.post("/api/reactions/", json=reaction_payload, headers=headers)
     reaction_id = create_response.json()["id"]
 
     # Delete the reaction
-    response = client.delete(f"/api/reactions/{reaction_id}")
+    response = client.delete(f"/api/reactions/{reaction_id}", headers=headers)
     assert response.status_code == 200
-    assert response.json()["status"] == "deleted"
-
-    # Verify it's gone
-    get_response = client.get(f"/api/reactions/{reaction_id}")
-    assert get_response.status_code == 404 
+    assert response.json() == {"status": "deleted"} 

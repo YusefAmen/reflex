@@ -1,0 +1,65 @@
+# Default values for reflex chart
+
+# Kafka (Redpanda) configuration
+kafka:
+  enabled: true
+  replicas: 3
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  storage:
+    size: 10Gi
+  config:
+    developerMode: true
+    autoCreateTopics: true
+
+# Celery worker configuration
+celery:
+  enabled: true
+  replicas: 2
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+  config:
+    logLevel: INFO
+    concurrency: 4
+
+# Redis configuration
+redis:
+  enabled: true
+  auth:
+    enabled: true
+    password: ""  # Set in values-dev.yaml or values-prod.yaml
+  master:
+    persistence:
+      enabled: true
+      size: 8Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
+
+# Common configuration
+common:
+  image:
+    repository: reflex-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  environment:
+    - name: CELERY_BROKER_URL
+      value: "redis://reflex-redis-master:6379/0"
+    - name: CELERY_RESULT_BACKEND
+      value: "redis://reflex-redis-master:6379/0"
+    - name: KAFKA_BOOTSTRAP_SERVERS
+      value: "reflex-kafka:9092" 

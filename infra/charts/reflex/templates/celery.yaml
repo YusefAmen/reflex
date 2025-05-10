@@ -1,0 +1,65 @@
+{{- if .Values.celery.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-celery
+  labels:
+    app: {{ .Release.Name }}
+    component: celery
+spec:
+  replicas: {{ .Values.celery.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: celery
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        component: celery
+    spec:
+      containers:
+        - name: celery
+          image: "{{ .Values.common.image.repository }}:{{ .Values.common.image.tag }}"
+          imagePullPolicy: {{ .Values.common.image.pullPolicy }}
+          command:
+            - celery
+            - -A
+            - tasks
+            - worker
+            - --loglevel={{ .Values.celery.config.logLevel }}
+            - --concurrency={{ .Values.celery.config.concurrency }}
+          env:
+            {{- toYaml .Values.common.environment | nindent 12 }}
+          resources:
+            requests:
+              cpu: {{ .Values.celery.resources.requests.cpu }}
+              memory: {{ .Values.celery.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.celery.resources.limits.cpu }}
+              memory: {{ .Values.celery.resources.limits.memory }}
+          livenessProbe:
+            exec:
+              command:
+                - celery
+                - -A
+                - tasks
+                - inspect
+                - ping
+                - -d
+                - celery@$HOSTNAME
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - celery
+                - -A
+                - tasks
+                - inspect
+                - ping
+                - -d
+                - celery@$HOSTNAME
+            initialDelaySeconds: 5
+            periodSeconds: 10
+{{- end }} 

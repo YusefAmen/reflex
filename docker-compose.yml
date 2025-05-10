@@ -53,6 +53,7 @@ services:
   test-backend:
     build:
       context: ./apps/backend
+      dockerfile: Dockerfile
     container_name: reflex-test-backend
     volumes:
       - ./apps/backend:/app
