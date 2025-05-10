@@ -82,3 +82,10 @@ apps/web/
 - Firefox (latest)
 - Safari (latest)
 - Edge (latest)
+
+## Backend API URL
+
+After deploying your backend to Render, update your environment variables:
+
+- Set `NEXT_PUBLIC_API_URL` to your Render backend URL (e.g., `https://your-backend.onrender.com`).
+- This ensures all frontend API requests go to the correct backend.

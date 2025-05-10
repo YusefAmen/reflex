@@ -5,7 +5,7 @@ docs/
 # === General ===
 .env
 .env.*
-!.env.template
+#!.env.example
 
 node_modules/
 __pycache__/

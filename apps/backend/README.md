@@ -1,7 +1,7 @@
-# Reflex Backend
+# Reflex Backend (FastAPI)
 
 ## Overview
-FastAPI-based backend service for Reflex, handling log ingestion, reaction rules, and complaint management.
+This is the backend service for Reflex, built with FastAPI. It handles API requests, authentication, and integrates with Supabase for data storage and auth.
 
 ## Tech Stack
 - **Framework**: FastAPI
@@ -30,9 +30,14 @@ FastAPI-based backend service for Reflex, handling log ingestion, reaction rules
    # Edit .env with your Supabase credentials
    ```
 
-3. Run the development server:
+3. Run with Docker Compose:
    ```bash
-   uvicorn main:app --reload
+   docker-compose up --build
+   ```
+
+4. Run FastAPI locally:
+   ```bash
+   uvicorn main:app --reload --host 0.0.0.0 --port 8000
    ```
 
 ### Running Tests
@@ -81,9 +86,38 @@ apps/backend/
 - Health check endpoint at `/health`
 - Rate limiting on all endpoints
 - CORS configured for frontend domain
+- All secrets and environment variables should be set in the Render dashboard, never committed to code
+- Use the Dockerfile for reproducible builds
+- Monitor usage on Render's free tier (services may sleep after inactivity)
 
-## Deployment
-- CI/CD via GitHub Actions
-- Deployed to Fly.io
-- Environment variables managed in Fly.io dashboard
-- Database migrations run automatically on deploy 
+## Deployment: Render.com
+
+### 1. Create a Render Account
+- Go to [https://render.com/](https://render.com/) and sign up.
+
+### 2. Create a New Web Service
+- Click **New Web Service**.
+- Connect your GitHub repo.
+- Set the root directory to `apps/backend`.
+- Choose **Docker** as the environment (Render will use your Dockerfile).
+
+### 3. Set Environment Variables
+- In the Render dashboard, add the following environment variables:
+  - `SUPABASE_URL`
+  - `SUPABASE_ANON_KEY`
+  - `SUPABASE_SERVICE_ROLE_KEY`
+  - `POSTGRES_PASSWORD` (if needed)
+  - `REDIS_URL` (if needed)
+- These should match your `.env.template` and Supabase project settings.
+
+### 4. Deploy
+- Click **Create Web Service**.
+- Render will build and deploy your FastAPI app.
+- After deployment, note your backend URL (e.g., `https://your-backend.onrender.com`).
+
+### 5. Update Frontend API URL
+- Update your frontend (Vercel) to use the new Render backend URL for API requests.
+- Set `NEXT_PUBLIC_API_URL` in your frontend environment variables.
+
+## Migrated from Fly.io
+- This project was previously configured for Fly.io. All deployment instructions now reference Render. 
