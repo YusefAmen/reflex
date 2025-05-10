@@ -5,36 +5,23 @@ on:
     branches: [main]
 
 jobs:
-  build-and-test:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Build Docker image (for CI only)
-        uses: docker/build-push-action@v4
-        with:
-          context: ./apps/backend
-          push: false
-          tags: reflex-backend:ci
-
-      - name: Run backend tests
+      - name: Trigger Render Deploy
         run: |
-          docker run --rm \
-            -e SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
-            -e SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }} \
-            -e SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }} \
-            reflex-backend:ci pytest
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
 
-      # ---
-      # Render.com deploys automatically on push to main if connected to GitHub.
-      # If you want to trigger a manual deploy, uncomment and set your deploy hook below:
-      #
-      # - name: Trigger Render Deploy
-      #   run: |
-      #     curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-      #
-      # See: https://render.com/docs/deploy-hooks
-      # --- 
+# The Docker image is built, tested, and pushed in CI. Render should be configured to pull
+# ghcr.io/${{ github.repository }}/reflex-backend:${{ github.sha }} as the image for deployment.
+# See: https://render.com/docs/deploy-hooks
+
+  # Render.com deploys automatically on push to main if connected to GitHub.
+  # If you want to trigger a manual deploy, uncomment and set your deploy hook below:
+  #
+  # - name: Trigger Render Deploy
+  #   run: |
+  #     curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+  #
+  # See: https://render.com/docs/deploy-hooks
+  # --- 
