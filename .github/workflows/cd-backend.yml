@@ -13,7 +13,7 @@ jobs:
           curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
 
 # The Docker image is built, tested, and pushed in CI. Render should be configured to pull
-# ghcr.io/${{ github.repository }}/reflex-backend:${{ github.sha }} as the image for deployment.
+# ghcr.io/${{ github.repository_owner.toLowerCase() }}/reflex-backend:${{ github.sha }} as the image for deployment.
 # See: https://render.com/docs/deploy-hooks
 
   # Render.com deploys automatically on push to main if connected to GitHub.

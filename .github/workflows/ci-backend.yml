@@ -27,7 +27,7 @@ jobs:
         with:
           context: ./apps/backend
           push: false
-          tags: ghcr.io/${{ github.repository }}/reflex-backend:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository_owner.toLowerCase() }}/reflex-backend:${{ github.sha }}
           load: true
 
       - name: Run backend tests in Docker image
@@ -36,11 +36,11 @@ jobs:
             -e SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
             -e SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }} \
             -e SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }} \
-            ghcr.io/${{ github.repository }}/reflex-backend:${{ github.sha }} pytest
+            ghcr.io/${{ github.repository_owner.toLowerCase() }}/reflex-backend:${{ github.sha }} pytest
 
       - name: Push Docker image to GHCR
         uses: docker/build-push-action@v4
         with:
           context: ./apps/backend
           push: true
-          tags: ghcr.io/${{ github.repository }}/reflex-backend:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository_owner.toLowerCase() }}/reflex-backend:${{ github.sha }}
