@@ -6,4 +6,5 @@ kafka-python
 celery
 psycopg2-binary
 pytest
+pytest-cov
 httpx 
